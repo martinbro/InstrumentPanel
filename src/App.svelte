@@ -7,6 +7,7 @@
 	import Kort from "./component/Kort.svelte";
 	import VisGPSData from "./component/VisGPSdata.svelte";
 	import VisBNOData from "./component/VisBNOdata.svelte";
+	import Indstillinger from "./component/Indst.svelte";
 	import type { IGPS } from "./interfaces"
 	
 	let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws');//Computers mobil netværk
@@ -75,13 +76,13 @@
 		<Kort></Kort>
 	</div>
 	<div id="dashb">
-		<p> to learn how to build Svelte apps.</p>
+		<Indstillinger></Indstillinger>
 	</div>
 </main>
 
 <style>
 	main {
-		text-align: center;
+		/* text-align: center; */
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
