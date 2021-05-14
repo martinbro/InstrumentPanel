@@ -1,10 +1,10 @@
 <script lang="ts">
     /*Ansvar: 1 formatringen for output der sendes fra ESP8255
     //data tilgås fra App.svelte som en prop.*/
-    import type {IGPS} from "../interfaces"
+    import type {IBNO} from "../interfaces"
 
-    export let gps:IGPS;
-    let k: string[] =Object.keys(gps)
+    export let bno:IBNO;
+    let k: string[] =Object.keys(bno)
     const snr = (tal:number,dec:number):String=> {
         let factor =Number(Math.pow(10,dec));
         return (Math.round(tal*factor)/factor).toFixed(dec)
@@ -12,16 +12,17 @@
 
     //bygger et array som sendes videre til visning
     $:d= [
-        {name:"Længde", val:snr(Number(gps.lat)/10000000, 6)},
-        {name:"Bredde", val:snr(Number(gps.lng)/10000000, 6)},
-        {name:"HDOP", val:snr(Number(gps.hdop), 1)},
-        {name:"Sat", val:snr(Number(gps.sat), 0)},
+        {name:"Kurs", val:snr(Number(bno.kurs), 1)},
+        {name:"Kalibrering", val:snr(Number(bno.kal), 0)},
+        {name:"Fluxgate", val:snr(Number(bno.rawkurs), 1)},
+        {name:"Roll", val:snr(Number(bno.roll), 2)},
+        {name:"Pitch", val:snr(Number(bno.pitch), 2)},
         //{name:"Kurs",val:snr(Number(gps.lat) ,5)},
         //{name:"Fart",val:snr(Number(gps.lat) ,5)},
     ];
 
 </script>
-    <h3>GPS data</h3>
+    <h3>Gyro data</h3>
     <span>
         {#each d as elm}
             <ul>

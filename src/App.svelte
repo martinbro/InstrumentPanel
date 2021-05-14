@@ -6,6 +6,7 @@
 */
 	import Kort from "./component/Kort.svelte";
 	import VisGPSData from "./component/VisGPSdata.svelte";
+	import VisBNOData from "./component/VisBNOdata.svelte";
 	import type { IGPS } from "./interfaces"
 	
 	let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws');//Computers mobil netværk
@@ -28,9 +29,13 @@
 		sat: 0
 	};
 	let bno={
-		kal: 0,
-		kurs: 0,
+		dt: 0.006,
+		kal: 3033,
+		kurs: -1095.919,
 		name: "bno",
+		pitch: -0.669804,
+		rawkurs: -1094.175,
+		roll: 0.748573,
 	};
 		
 	
@@ -59,15 +64,19 @@
 </script>
 
 <main>
-
-	<VisGPSData gps={gps} >
-		{gps.lat}
-	</VisGPSData>
-	<!-- <VisData gps={bno} >
-		{bno.kurs}
-	</VisData> -->
-	<Kort></Kort>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<h1>Fablab App</h1>
+	<div id="gps">
+		<VisGPSData  gps={gps} ></VisGPSData>
+	</div>
+	<div id="gyro">
+		<VisBNOData bno={bno} ></VisBNOData>
+	</div>
+	<div id="kort">
+		<Kort></Kort>
+	</div>
+	<div id="dashb">
+		<p> to learn how to build Svelte apps.</p>
+	</div>
 </main>
 
 <style>
@@ -76,14 +85,34 @@
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
+		display: grid;
+		grid-template-columns: 1fr auto auto auto  auto 1fr;	
+		gap: 1em;
 	}
-
-	/* h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	} */
+	
+	h1 {
+		grid-column: 2 / span 2;
+		/* background-color: navy; */
+		margin: auto 0 0 0;
+		text-align: left;
+	}
+	#gps{
+		grid-column: 2 / span 1;
+		background-color:red;
+	}
+	#gyro{
+		grid-column: 3 / span 1;
+		background-color:burlywood;
+		
+	}
+	#kort{
+		grid-column: 2 / span 3;
+		background-color:gold;
+	}
+	#dashb{
+		grid-column: 5 / span 1;
+		background-color:darkgreen;
+	}
 
 	@media (min-width: 640px) {
 		main {
