@@ -64,7 +64,7 @@
 </script>
 
 <main>
-	<h1>Fablab App</h1>
+	<h1>Navigations App.</h1>
 	<div id="gps">
 		<VisGPSData  gps={gps} ></VisGPSData>
 	</div>
@@ -98,11 +98,11 @@
 	}
 	#gps{
 		grid-column: 2 / span 1;
-		background-color:red;
+		/* background-color:red; */
 	}
 	#gyro{
 		grid-column: 3 / span 1;
-		background-color:burlywood;
+		/* background-color:burlywood; */
 		
 	}
 	#kort{
@@ -111,7 +111,7 @@
 	}
 	#dashb{
 		grid-column: 5 / span 1;
-		background-color:darkgreen;
+		background-color:lightblue;
 	}
 
 	@media (min-width: 640px) {

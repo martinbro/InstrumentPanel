@@ -12,8 +12,8 @@
 
     //bygger et array som sendes videre til visning
     $:d= [
-        {name:"Længde", val:snr(Number(gps.lat)/10000000, 6)},
-        {name:"Bredde", val:snr(Number(gps.lng)/10000000, 6)},
+        {name:"Længde gr.", val:snr(Number(gps.lat)/10000000, 6)},
+        {name:"Bredde gr.", val:snr(Number(gps.lng)/10000000, 6)},
         {name:"HDOP", val:snr(Number(gps.hdop), 1)},
         {name:"Sat", val:snr(Number(gps.sat), 0)},
         //{name:"Kurs",val:snr(Number(gps.lat) ,5)},
@@ -21,7 +21,7 @@
     ];
 
 </script>
-    <h3>GPS data</h3>
+<h3>GPS data</h3>
     <span>
         {#each d as elm}
             <ul>
@@ -29,18 +29,22 @@
                 <li>{elm.val}</li>
             </ul>
         {/each}
-        </span>
+    </span>
 <style>
-
+span {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 0.5em;
+}
 ul {
-    display: inline-block;
+    /* display: inline-block; */
     margin: 0;
     padding: 0;
     width: auto;
 }
 li {
   display: block;
-  margin-right: 10px;
+  /* margin-right: 10px; */
   text-align: center;
   text-decoration: none;
 }
