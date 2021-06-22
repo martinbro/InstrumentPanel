@@ -1,21 +1,23 @@
 
 interface IGPS{
-    gpscourse: number;
-    gpsspeed: number;
+    lat: number;
+    lng: number;
     hdop: number;
-    lat: string;
-    lng: string;
-    name: string;
     sat: number;
+    course?: number;
+    speed?: number;
 }
 interface IBNO{
+    kurs: number;
+    pitch: number;
+    roll: number;
     dt: number;
     kal: number;
-    kurs: number;
-    name: string;
-    pitch: number;
-    rawkurs: number;
-    roll: number;
+    rawkurs?: number;
+    kursGS?:number;
+    sp?:number;
+    ror?:number;
 }
+
 export type {IGPS}
 export type {IBNO}

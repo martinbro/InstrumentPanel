@@ -2,9 +2,11 @@
 import { fly } from 'svelte/transition';
 import IndstBox from "./IndstBox.svelte"
 
-let rad:number = 1
+let rad:number = 1;
 let FastholdFlag:boolean = false;
 let isVektorLaengde:boolean = false;
+
+$: antalMeter = Math.round(rad*1852/60*10)/10;
 
 </script>
 
@@ -35,7 +37,7 @@ let isVektorLaengde:boolean = false;
         <input type=number bind:value={rad} min=1 max=60>
         <input type=range bind:value={rad} min=1 max=60>
     </label>
-    <p>længden: m</p>
+    <p>længden: {antalMeter}m</p>
 </IndstBox>
  
 
@@ -43,7 +45,7 @@ let isVektorLaengde:boolean = false;
 <!-- <hr> -->
 <style>
 
-    #box{
+    /* #box{
         margin: 0px;
         display: inline-block;
         border-style:solid;
@@ -53,7 +55,7 @@ let isVektorLaengde:boolean = false;
         width: 30px;
         text-align: center;
 
-    }
+    } */
     h2{
         margin: 0;
         width:11em
@@ -63,7 +65,7 @@ let isVektorLaengde:boolean = false;
         display: inline-block;
         width:2em;  
     }
-    hr {
+    /* hr {
         border: 1px solid white;
         border-top: 1px solid grey;
     }
@@ -71,14 +73,14 @@ let isVektorLaengde:boolean = false;
         margin: 0;
         padding: 0 15px 15px 15px;
         background-color: wheat;
-    }
+    } */
     p{
         margin: 0;
         padding: 0;
     }
-    .wp input{
+    /* .wp input{
         display: inline-block;
         width: 115px;
-    }
+    } */
     
 </style>

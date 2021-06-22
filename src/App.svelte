@@ -8,7 +8,8 @@
 	import VisGPSData from "./component/VisGPSdata.svelte";
 	import VisBNOData from "./component/VisBNOdata.svelte";
 	import Indstillinger from "./component/Indst.svelte";
-	import type { IGPS } from "./interfaces"
+	import type { IGPS,IBNO } from "./interfaces"
+
 	
 	let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws');//Computers mobil netværk
 	
@@ -18,48 +19,66 @@
 	let passedData:I_DATA;
 	
 	let gps:IGPS={
-		gpscourse: 0,
-		gpsspeed: 0,
+		lat: 0,
+		lng: 0,
 		hdop: 0,
-			// kal: 0,
-			// kurs: 0,
-		lat: "",
-		lng: "",
-			// lolationvalid: false,
-		name: "",
-		sat: 0
+		sat: 0,
+		// course: 0,
+		// speed: 0,
 	};
-	let bno={
-		dt: 0.006,
-		kal: 3033,
-		kurs: -1095.919,
-		name: "bno",
-		pitch: -0.669804,
-		rawkurs: -1094.175,
-		roll: 0.748573,
+	//let bno1:number[];
+	let bno:IBNO={
+		kurs: 0.000,
+		roll: 0.0,
+		pitch: 0.0,
+		dt: 0.000,
+		kal: 1000,
+		rawkurs: 0.0,
+		kursGS: 0.0,
+		sp: 0.0,
+		ror: 0.0,
 	};
 		
 	
 	//setup listner 
 	const inputMassage = ({data}) => {
-	//ev får automatisk adgang til eventen, der lyttes til
-	//samt destructure ev.data til {data} i argumentet
-	
-	// const {name,lat,lng,hdop,kurs,kal,rawkurs} = JSON.parse(data); //destructure igen - men nu data elementet'
-	passedData = JSON.parse(data); //destructure igen - men nu data elementet'
-	
-	if(passedData.name ==='navigation'){
-		gps=Object.assign(gps,passedData);//Mere performance
-		//gps = {...gps,...dat}
-		console.log(bno, Object.keys(bno).length);
-		console.log(gps, Object.keys(gps).length);
+	const str:string[] = data.split(",");
+	 
+	const navn:string = str.shift();
+
+	if(navn ==='gps'){
+		if(str.length==6){
+			try {
+				gps.lat = Number(str[0]);
+				gps.lng = Number(str[1]);
+				gps.hdop = Number(str[2]);
+				gps.sat = Number(str[3]);
+				gps.course = Number(str[4]);
+				gps.speed = Number(str[5]);	
+			} catch (error) {
+				console.log(error);
+			}
+			
 		}
-	if(passedData.name == "bno"){ //Fast update
-// console.log(dat.kurs);
-		bno=Object.assign(bno,passedData);//Mere performance
-		//gps = {...gps,...dat}
-		// console.log(b,Object.keys(bno).length);
+	}
+	if(navn == "bno"){ 
+		if(str.length==9)
+		try {
+			bno.kurs = Number(str[0]);
+			bno.roll = Number(str[1]);
+			bno.pitch = Number(str[2]);
+			bno.dt = Number(str[3]);
+			bno.kal = Number(str[4]);
+			bno.rawkurs = Number(str[5]);
+			bno.kursGS = Number(str[6]);
+			bno.sp = Number(str[7]);
+			bno.ror = Number(str[8]);
+
+		} catch (error) {
+			console.log(error);
 		}
+	}
+	
 	}
 	ws.addEventListener('message', inputMassage)
 </script>
@@ -70,12 +89,15 @@
 		<VisGPSData  gps={gps} ></VisGPSData>
 	</div>
 	<div id="gyro">
-		<VisBNOData bno={bno} ></VisBNOData>
+		<VisBNOData bno = {bno} ></VisBNOData>
 	</div>
 	<div id="kort">
 		<Kort></Kort>
 	</div>
-	<div id="dashb">
+	<div id="Indstillinger">
+		<Indstillinger></Indstillinger>
+	</div>
+	<div id="Statestik">
 		<Indstillinger></Indstillinger>
 	</div>
 </main>
@@ -87,7 +109,8 @@
 		max-width: 240px;
 		margin: 0 auto;
 		display: grid;
-		grid-template-columns: 1fr auto auto auto  auto 1fr;	
+		grid-template-columns: 1fr auto auto auto  auto 1fr;
+		grid-template-rows: auto auto auto auto auto;	
 		gap: 1em;
 	}
 	
@@ -108,11 +131,19 @@
 	}
 	#kort{
 		grid-column: 2 / span 3;
+		grid-row: 3/span 3;
 		background-color:gold;
 	}
-	#dashb{
+	#Indstillinger{
 		grid-column: 5 / span 1;
+		grid-row: 3/span 1;
 		background-color:lightblue;
+	}
+	#Statestik{
+		grid-column: 5 / span 1;
+		grid-row: 4/span1;
+		background-color:lightblue;
+
 	}
 
 	@media (min-width: 640px) {

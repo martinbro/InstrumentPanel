@@ -6,10 +6,7 @@
     export let bno:IBNO;
     let k: string[] =Object.keys(bno)
 
-    const snr = (tal:number,dec:number):String=> {
-        let factor =Number(Math.pow(10,dec));
-        return (Math.round(tal*factor)/factor).toFixed(dec)
-    }
+
     const formatKurs = (kurs:number):number=>{
         while (kurs<0) {
             kurs += 360;
@@ -17,18 +14,18 @@
         while (kurs>360){
             kurs -= 360;
         }
-        return kurs;//(Math.round(kurs*10)/10).toFixed(1);
+        return kurs;
     }
 
     //bygger et array som sendes videre til visning
-    $:d= [
-        {name:"Gyrokurs", val:snr(formatKurs(Number(bno.kurs)), 1)},
-        {name:"Kalibrering", val:snr(Number(bno.kal), 0)},
-        {name:"Fluxgate", val:snr(Number(bno.rawkurs), 1)},
-        {name:"Roll", val:snr(Number(bno.roll), 2)},
-        {name:"Pitch", val:snr(Number(bno.pitch), 2)},
-        //{name:"Kurs",val:snr(Number(gps.lat) ,5)},
-        //{name:"Fart",val:snr(Number(gps.lat) ,5)},
+    $:d=[
+        {name:"Gyrokurs", val:formatKurs((bno.kurs)).toFixed(1)},
+        {name:"Kalibrering", val:bno.kal},
+        {name:"Fluxgate", val:bno.rawkurs.toFixed(1)},
+        {name:"Roll", val:bno.roll.toFixed(2)},
+        {name:"Pitch", val:bno.pitch.toFixed(2)},
+        {name:"dt", val:bno.dt.toFixed(3)},
+
     ];
 
 </script>
@@ -44,7 +41,7 @@
 <style>
 span {
     display: grid;
-    grid-template-columns: auto auto auto auto auto;
+    grid-template-columns: repeat(6, auto);
     gap: 0.5em;
 }
 ul {

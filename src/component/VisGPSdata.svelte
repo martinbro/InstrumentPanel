@@ -4,20 +4,15 @@
     import type {IGPS} from "../interfaces"
 
     export let gps:IGPS;
-    let k: string[] =Object.keys(gps)
-    const snr = (tal:number,dec:number):String=> {
-        let factor =Number(Math.pow(10,dec));
-        return (Math.round(tal*factor)/factor).toFixed(dec)
-    }
 
     //bygger et array som sendes videre til visning
     $:d= [
-        {name:"Længde gr.", val:snr(Number(gps.lat)/10000000, 6)},
-        {name:"Bredde gr.", val:snr(Number(gps.lng)/10000000, 6)},
-        {name:"HDOP", val:snr(Number(gps.hdop), 1)},
-        {name:"Sat", val:snr(Number(gps.sat), 0)},
-        //{name:"Kurs",val:snr(Number(gps.lat) ,5)},
-        //{name:"Fart",val:snr(Number(gps.lat) ,5)},
+        {name:"Længde gr.", val:gps.lat.toFixed(6)},
+        {name:"Bredde gr.", val:gps.lng.toFixed(6)},
+        {name:"HDOP", val:gps.hdop.toFixed(1)},
+        {name:"Sat", val:gps.sat},
+        //{name:"Kurs",val:gps.course},
+        //{name:"Fart",val:gps.speed},
     ];
 
 </script>
