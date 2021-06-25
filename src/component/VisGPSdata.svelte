@@ -1,7 +1,8 @@
 <script lang="ts">
     /*Ansvar: 1 formatringen for output der sendes fra ESP8255
     //data tilgås fra App.svelte som en prop.*/
-    import type {IGPS} from "../interfaces"
+    import type {IGPS} from "../Interfaces/interfaces"
+    
 
     export let gps:IGPS;
 

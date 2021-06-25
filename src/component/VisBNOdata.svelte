@@ -1,7 +1,7 @@
 <script lang="ts">
     /*Ansvar: 1 formatringen for output der sendes fra ESP8255
     //data tilgås fra App.svelte som en prop.*/
-    import type {IBNO} from "../interfaces"
+    import type {IBNO} from "../Interfaces/interfaces"
 
     export let bno:IBNO;
     let k: string[] =Object.keys(bno)

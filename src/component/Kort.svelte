@@ -2,6 +2,8 @@
  
     import * as L from "leaflet";
     import "leaflet/dist/leaflet.css";
+
+    
     // import { Lat, Lng, Hdop, Kurs,Rawkurs, Kal , FastholdFlag,Fluxgate, rad, nrRays , fixedLat,fixedLng,WPoints, wpAktiv} from "../stores/store";
     //Erklæringer **********************************************
     
@@ -68,8 +70,7 @@
 
     //     }    
     // );}
-    pos.lat = 54.856843;  //54.850948;////Default val
-    pos.lng = 10.517485;//10.510416;//
+
     // let r = 1;
     // const toRad = Math.PI / 180;
     // const toDeg = 1 / toRad;

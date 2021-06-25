@@ -1,6 +1,9 @@
 <script lang="ts">
 import { fly } from 'svelte/transition';
+// import {}
 export let title:string;
+
+
 let checked=false;
 let rad=1;
 
@@ -18,12 +21,10 @@ let rad=1;
 
 <style>
  
-
     .panel{
         margin: 0;
         padding: 0 15px 15px 15px;
         background-color: wheat;
     }
 
-    
 </style>

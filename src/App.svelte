@@ -4,23 +4,23 @@
 	2. Henter data og parser dem til standardformat: JSON obj så værdier er hardkodede som fx. gps.lat
 	3. sender filtrerede data ud som props til componenterne
 */
-	import Kort from "./component/Kort.svelte";
+	import Kort from "./component/Kort1.svelte";
 	import VisGPSData from "./component/VisGPSdata.svelte";
 	import VisBNOData from "./component/VisBNOdata.svelte";
 	import Indstillinger from "./component/Indst.svelte";
-	import type { IGPS,IBNO } from "./interfaces"
+	import type { IGPS,IBNO } from "./Interfaces/interfaces"
 
 	
 	let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws');//Computers mobil netværk
 	
-	interface I_DATA{
-		name: String,
-	}
-	let passedData:I_DATA;
+	// interface I_DATA{
+	// 	name: String,
+	// }
+	// let passedData:I_DATA;
 	
 	let gps:IGPS={
-		lat: 0,
-		lng: 0,
+		lat: 54.8568430, 
+		lng:10.5174850,
 		hdop: 0,
 		sat: 0,
 		// course: 0,
@@ -58,24 +58,25 @@
 			} catch (error) {
 				console.log(error);
 			}
-			
 		}
 	}
-	if(navn == "bno"){ 
-		if(str.length==9)
-		try {
-			bno.kurs = Number(str[0]);
-			bno.roll = Number(str[1]);
-			bno.pitch = Number(str[2]);
-			bno.dt = Number(str[3]);
-			bno.kal = Number(str[4]);
-			bno.rawkurs = Number(str[5]);
-			bno.kursGS = Number(str[6]);
-			bno.sp = Number(str[7]);
-			bno.ror = Number(str[8]);
 
-		} catch (error) {
-			console.log(error);
+	if(navn == "bno"){ 
+		if(str.length==9){
+			try {
+				bno.kurs = Number(str[0]);
+				bno.roll = Number(str[1]);
+				bno.pitch = Number(str[2]);
+				bno.dt = Number(str[3]);
+				bno.kal = Number(str[4]);
+				bno.rawkurs = Number(str[5]);
+				bno.kursGS = Number(str[6]);
+				bno.sp = Number(str[7]);
+				bno.ror = Number(str[8]);
+				
+			} catch (error) {
+				console.log(error);
+			}			
 		}
 	}
 	
@@ -92,13 +93,13 @@
 		<VisBNOData bno = {bno} ></VisBNOData>
 	</div>
 	<div id="kort">
-		<Kort></Kort>
+		<Kort kurs = {bno.kurs} fluxgate={bno.kursGS} rawfluxgate={bno.rawkurs} gps={gps}></Kort>
 	</div>
 	<div id="Indstillinger">
-		<Indstillinger></Indstillinger>
+		<Indstillinger gps = {gps}></Indstillinger>
 	</div>
 	<div id="Statestik">
-		<Indstillinger></Indstillinger>
+		
 	</div>
 </main>
 
