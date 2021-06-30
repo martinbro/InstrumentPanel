@@ -1,11 +1,16 @@
 <script lang="ts">
 import { fly } from 'svelte/transition';
-// import {}
+import {beforeUpdate,afterUpdate} from 'svelte';
+
 export let title:string;
+export let checked:boolean = false;
 
+// beforeUpdate (() => {
+// 		checked = sh;
+// 	})
 
-let checked=false;
-let rad=1;
+// let checked=false;
+
 
 </script>
 

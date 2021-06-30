@@ -1,22 +1,23 @@
 <script lang="ts">
     import * as L from "leaflet";
     import "leaflet/dist/leaflet.css";
-    import type { ILinjeSegment,IPos,IGPS} from "../Interfaces/interfaces"
-    import {isFixed,fixedLat,fixedLng} from "../stores/indstStore"
+    import type {IPos,IGPS,IState,IContainers} from "../Interfaces/interfaces"
+    import {isFixed,fixedLat,fixedLng,
+            isVisGyro, isVisFluxgate,isVisRawFluxgate,antalVektorer,
+            radius,isVisGPS,antalGPSpos,aktuelAntalGPSpos} from "../stores/indstStore"
 
     export let kurs:number;
     export let fluxgate:number;
     export let rawfluxgate:number;
-
     export let gps:IGPS;
 
     //Konstanter
     const toRad = Math.PI/180;
 
-    //Tegner kort og gennerelle variable
-    let map = undefined;
+    //Variable
+    let map:any = undefined;
     let startpos:IPos = {lat:54.8568430, lng:10.5174850};
-
+    
 
     //Håndterer skibets position og retningsvektor 
     $: skibPos =():IPos=>{
@@ -24,57 +25,109 @@
         else return {lat:gps.lat, lng:gps.lng};
     }
 
-
     $: kursState = {
+        vis: $isVisGyro,
         pos: skibPos(),
         color:"red",
-        radius:1/3600
+        radius:$radius/3600,
+        //antal:$antalVektorer
     }
     $: fluxState = {
+        vis: $isVisFluxgate,
         pos: skibPos(),
         color:"blue",
-        radius:1/3600*0.9
+        radius:$radius/3600*0.9,
+        //antal:$antalVektorer
     }
-    $:  rawfluxState = {
+    $: rawfluxState = {
+        vis: $isVisRawFluxgate,
         pos: skibPos(),
-        color:"yellow",
-        radius:1/3600
+        color:"purple",
+        radius:$radius/3600*0.9,
+       // antal: $antalVektorer
     }
-    
-    const linjer = {
-        kurs:[],
-        rawflux:[],
-        flux:[]
+    $: gpsState = {
+        vis: $isVisGPS,
+        pos: {lat:gps.lat, lng:gps.lng},
+        color:"gray",
+        radius: 0.2,
+        //antal:$antalGPSpos
     }
 
-    $: updateLine(kurs,kursState,linjer.kurs);
-    $: updateLine(fluxgate,fluxState,linjer.flux,1);
-    $: updateLine(rawfluxgate,rawfluxState,linjer.rawflux,1);
+    const containers:IContainers = {
+        //Holder et antal streg/cirkelelementer
+        kurs:[],
+        rawflux:[],
+        flux:[],
+        gps:[]
+    }
+
+    $: updateLine(kurs, kursState, containers.kurs );
+    $: updateLine(fluxgate, fluxState, containers.flux);
+    $: updateLine(rawfluxgate, rawfluxState, containers.rawflux);
+    $: updateCirkel( gpsState, containers.gps);
     
-    function updateLine(linje,kursstate:ILinjeSegment,holder,max = 1){
+    function updateLine(linje:number,state:IState,container:any[]){
         if(map ==undefined) return; //venter til map er instantieret (første tik)
+        let max:number;
+        !state.vis? max=0: max= $antalVektorer;
         
-        if(max>0) holder.push(line(linje,kursstate))
-        while (holder.length>max) {
-            const fjernLinje = holder.shift();
-            fjernLinje.remove(map)
-        }
-        if(max>0) holder[holder.length - 1].addTo(map);
+        if(max>0) container.push(line(linje,state));
+        if(container.length>max)remove(container,max);
+ 
+        if(max>0){
+          container[container.length - 1].addTo(map);  
+        } 
     }
     
-    const line:L.Polyline= (kurs:number,ks:ILinjeSegment) => {
-        const pointA = new L.LatLng(ks.pos.lat, ks.pos.lng);
-        const pointB = new L.LatLng( ks.pos.lat + ks.radius * Math.cos(kurs*toRad), ks.pos.lng + (ks.radius / Math.cos(ks.pos.lat * toRad)) * Math.sin(kurs*toRad))
+    $:$antalGPSpos,remove(containers.gps,$antalGPSpos)
+    //Fællesrecource: Kaldes fra updateLine, UpdateCirkel og $antalGPSpos (responsive)
+    function remove(container:any[],max:number) {
+        while (container.length>max) {
+            if (max <0) max=0;//Sikkerhed: onde input fjernes
+            const fjernLinje = container.shift();
+            fjernLinje.remove(map)
+        }
+    }
+
+    function updateCirkel(state:IState,container:any[]){
+        if(map ==undefined) return; //venter til map er instantieret (første tik)
+        let max:number=0;
+        if(state.vis)max = $antalGPSpos;
+        if(max>0) container.push(circle(state));
+        if(container.length>max)remove(container,max);
+        if(max>0){
+            $aktuelAntalGPSpos = container.length;
+           // console.log("antal gps:",l);
+            container[$aktuelAntalGPSpos - 1].addTo(map); 
+        } 
+    }
+    
+
+    const line:L.Polyline= (kurs:number,state:IState) => {
+        const pointA = new L.LatLng(state.pos.lat, state.pos.lng);
+        const pointB = new L.LatLng( state.pos.lat + state.radius * Math.cos(kurs*toRad), state.pos.lng + (state.radius / Math.cos(state.pos.lat * toRad)) * Math.sin(kurs*toRad))
         let pointList = [pointA, pointB];
         return new L.Polyline(pointList, {
-            color:ks.color,
+            color:state.color,
             weight: 1.5,
             opacity: 0.5,
             smoothFactor: 1,
         });
     };
-    
-    function createMap(container) {
+
+    const circle:L.circle = (state:IState)=>{
+            return new L.circle([state.pos.lat, state.pos.lng], {
+            color: state.color,
+            opacity: 0.5,
+            fillColor: state.color,
+            fillOpacity: 0.3,
+            radius: state.radius,
+            smoothFactor: 1,
+        })
+    }
+
+    function createMap(container): any {
         let m = L.map(container).setView([startpos.lat, startpos.lng], 19);
         L.tileLayer(
             "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
@@ -88,9 +141,9 @@
         return m;
     }
     
-    function mapAction(container) {
+    function mapAction(container): { destroy: () => void; } {
         map = createMap(container);
-        map.on("click", function (e) {
+        map.on("click", function (e): void {
             if(true){
                 const coord = e.latlng.toString().split(",");
                 const lat = coord[0].split("(");

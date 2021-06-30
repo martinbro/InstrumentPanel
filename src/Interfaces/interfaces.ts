@@ -21,10 +21,13 @@ interface IBNO{
 }
 
 //Til Indst.js
-interface ILinjeSegment{
+interface IState{
+    vis: boolean;
     pos: IPos;
+    // kursretning?:number
     color: string;
     radius: number;
+    //antal: number;
 }
 
 interface IPos{
@@ -32,14 +35,16 @@ interface IPos{
     lng: number;
 }
 
-// interface IState {
-//     pos: IPos;
-//     color: string;
-//     radius: number;
-// }
+//anvendes i Kort1.svelte
+interface IContainers{
+    kurs: any[];
+    rawflux: any[];
+    flux: any[];
+    gps: any[]
+}
 
 export type {IGPS}
 export type {IBNO}
-export type {ILinjeSegment}
+export type {IState}
 export type {IPos}
-// export type {IState}
+export type {IContainers}
