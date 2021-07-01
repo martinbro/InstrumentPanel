@@ -8,9 +8,10 @@
 	import VisGPSData from "./component/VisGPSdata.svelte";
 	import VisBNOData from "./component/VisBNOdata.svelte";
 	import Indstillinger from "./component/Indst.svelte";
+	import Gyroindstillinger from "./component/Gyrokompas.svelte";
+
 	import type { IGPS,IBNO } from "./Interfaces/interfaces"
 
-	
 	let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws');//Computers mobil netværk
 	
 	// interface I_DATA{
@@ -95,11 +96,11 @@
 	<div id="kort">
 		<Kort kurs = {bno.kurs} fluxgate={bno.kursGS} rawfluxgate={bno.rawkurs} gps={gps}></Kort>
 	</div>
-	<div id="Indstillinger">
+	<div id="indstillinger">
 		<Indstillinger gps = {gps}></Indstillinger>
 	</div>
-	<div id="Statestik">
-		
+	<div id="gyroindstillinger">
+		<Gyroindstillinger ws={ws}></Gyroindstillinger>
 	</div>
 </main>
 
@@ -135,12 +136,12 @@
 		grid-row: 3/span 3;
 		background-color:gold;
 	}
-	#Indstillinger{
+	#indstillinger{
 		grid-column: 5 / span 1;
 		grid-row: 3/span 1;
 		background-color:lightblue;
 	}
-	#Statestik{
+	#gyroindstillinger{
 		grid-column: 5 / span 1;
 		grid-row: 4/span1;
 		background-color:lightblue;
