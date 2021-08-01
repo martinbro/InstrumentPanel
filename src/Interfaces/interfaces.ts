@@ -27,7 +27,7 @@ interface IState{
     // kursretning?:number
     color: string;
     radius: number;
-    //antal: number;
+    antal: number;
 }
 
 interface IPos{
@@ -40,7 +40,8 @@ interface IContainers{
     kurs: any[];
     rawflux: any[];
     flux: any[];
-    gps: any[]
+    gps: any[];
+    wp: any[];
 }
 
 export type {IGPS}

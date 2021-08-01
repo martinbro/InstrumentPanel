@@ -9,6 +9,9 @@
 	import VisBNOData from "./component/VisBNOdata.svelte";
 	import Indstillinger from "./component/Indst.svelte";
 	import Gyroindstillinger from "./component/Gyrokompas.svelte";
+	import WayPoints from "./component/WayPoints.svelte";
+	import Styring from "./component/Styring.svelte";
+	import Statistik from "./component/Statistik.svelte";
 
 	import type { IGPS,IBNO } from "./Interfaces/interfaces"
 
@@ -84,7 +87,9 @@
 	}
 	ws.addEventListener('message', inputMassage)
 </script>
-
+<svelte:head>
+	<title>Navigations App</title>
+</svelte:head>
 <main>
 	<h1>Navigations App.</h1>
 	<div id="gps">
@@ -96,11 +101,21 @@
 	<div id="kort">
 		<Kort kurs = {bno.kurs} fluxgate={bno.kursGS} rawfluxgate={bno.rawkurs} gps={gps}></Kort>
 	</div>
+	<!-- Højre side -->
 	<div id="indstillinger">
 		<Indstillinger gps = {gps}></Indstillinger>
 	</div>
 	<div id="gyroindstillinger">
 		<Gyroindstillinger ws={ws}></Gyroindstillinger>
+	</div>
+	<div id="Statistik">
+		<Statistik></Statistik>
+	</div>
+	<div id="Styring">
+		<Styring></Styring>
+	</div>
+	<div id="WayPoints">
+		<WayPoints ws={ws}></WayPoints>
 	</div>
 </main>
 
@@ -111,8 +126,8 @@
 		max-width: 240px;
 		margin: 0 auto;
 		display: grid;
-		grid-template-columns: 1fr auto auto auto  auto 1fr;
-		grid-template-rows: auto auto auto auto auto;	
+		grid-template-columns: 1fr auto auto auto  300px 1fr;
+		grid-template-rows: auto auto auto auto auto auto;	
 		gap: 1em;
 	}
 	
@@ -133,19 +148,34 @@
 	}
 	#kort{
 		grid-column: 2 / span 3;
-		grid-row: 3/span 3;
-		background-color:gold;
+		grid-row: 3/span 5;
+		/* background-color:gold; */
 	}
+	/* Højreside */
 	#indstillinger{
 		grid-column: 5 / span 1;
-		grid-row: 3/span 1;
+		grid-row: 3 ;
 		background-color:lightblue;
 	}
 	#gyroindstillinger{
 		grid-column: 5 / span 1;
-		grid-row: 4/span1;
+		grid-row: 4;
+		/* background-color:lightgreen; */
+	}
+	#Statistik{
+		grid-column: 5 / span 1;
+		grid-row: 5;
 		background-color:lightblue;
-
+	}
+	#Styring{
+		grid-column: 5 / span 1;
+		grid-row: 6;
+		/* background-color:lightgreen; */
+	}
+	#WayPoints{
+		grid-column: 5 / span 1;
+		grid-row: 7;
+		background-color:lightblue;
 	}
 
 	@media (min-width: 640px) {

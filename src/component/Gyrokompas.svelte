@@ -1,51 +1,93 @@
 <script lang="ts">
-import { fly } from 'svelte/transition';
-import {opdatefrek} from "../stores/GyrokompasStore"
+// import { fly } from 'svelte/transition';
+// import {} from "../stores/GyrokompasStore"
 //import type {IGPS} from "../Interfaces/interfaces"
 import IndstBox from "./IndstBox.svelte"
 
-export let ws:WebSocket;
+export let ws:WebSocket; 
 
-// $: antalMeter = Math.round($radius*1852/60*10)/10;
-// $: $isFixed, fixPos();
+let opdatefrek:number = 10;
+let k: number = 0.99;
+let misvisning:number = 3.75;
 
-// let fixPos = ()=>{
-//     if($isFixed){
-//         $fixedLat = gps.lat;
-//         $fixedLng = gps.lng;
-//     }
-// }
-$: $opdatefrek, sendRatenTilGyro()
+$:sendOpdateringsRaten(opdatefrek);
+$:sendK_værdi(k);
+$:sendMisvisning(misvisning)
 
-function sendRatenTilGyro() {
-     if(ws.readyState == ws.OPEN){
-        let n:number = Math.round(1000/$opdatefrek);//Min. er 20 ms = 50Hz  og Max. 1000 ms = 1Hz(jf. skærmens opdateringstid)
-        
-        if(n<20) return;
-        if(1000<n) return;
-        let m:string = `esp:,,${n},`;
+function sendOpdateringsRaten(opdatefrek:number):void {
+    if(ws.readyState != ws.OPEN) return;
 
-        console.log(m);
+    let n:number = Math.round(1000/opdatefrek);//Min. er 20 ms = 50Hz  og Max. 1000 ms = 1Hz(jf. skærmens opdateringstid)
+    
+    if(0<opdatefrek) {//safety
+        if(n < 17) return;//Pjat at opdatere hurtigere end 60Hz
+        let m:string = `esp;b${n}`;      
         ws.send(m);
-        
-    } 
+    }
 }
+
+function sendK_værdi(k:number): void {
+    if(ws.readyState != ws.OPEN) return;
+
+    if(k<0) return  //safety
+    if(1<k) return  //safety
+
+    let m:string = `esp;c${k}`;
+    ws.send(m);
+}
+
+function sendMisvisning(misvisning:number): void {
+    if(ws.readyState != ws.OPEN) return;
+    
+    if(misvisning<-30) return  //safety
+    if(30<misvisning) return  //safety
+
+    let m:string = `esp;d${misvisning/1.0}`;
+    ws.send(m);
+}
+
 </script>
 
 <!-- *************************************************************************************************************** -->
 
-<h2>Gyrokompas indstillinger</h2>
-<IndstBox title="Opdateringsfrekvens" >
-    <p>Ret opdateringsfrekvensen, (Antal opdteringer pr. sek).</p>
+<h2>Gyrokompas</h2>
+<IndstBox title="Ret Opdateringsfrekvens" >
+    <p>Ret antal opdateringer pr. sek.</p>
     <label> 
-        <input type=number bind:value={$opdatefrek} min=1 max=50>
-        <input type=range bind:value={$opdatefrek} min=1 max=50>
+        <input type=number bind:value={opdatefrek} min=1 max=50 >
+        <input type=range bind:value={opdatefrek} min=1 max=50 >
     </label>
-    <p><small>Tid mellem opdateringer {Math.round(1000/$opdatefrek)} ms</small></p>
+    {#if 50 < opdatefrek }
+        <p><small style="color:red">Ulovligt input! Frekvensen er for stor</small></p>
+    {:else if opdatefrek < 1}
+        <p><small style="color:red">Ulovligt input! Frekvensen er for lille</small></p>
+    {:else}
+        <p><small>Tid mellem opdateringer {Math.round(1000/opdatefrek)} ms</small></p>
+    {/if}
 </IndstBox>
 
+<IndstBox title="ret K-værdi" >
+    <p>Procentdel gyroen vægter i forhold til fluxgate</p>
+    <label> 
+        <input type=number bind:value={k} step=0.01 min=0 max=1.00>
+        <input type=range bind:value={k} step=0.01 min=0 max=1.00>
+    </label>
+    {#if 1 <k }
+        <p><small style="color:red">Ulovligt input! K-værdien må max. sættes til 1</small></p>
+    {:else if k < 0}
+        <p><small style="color:red">Ulovligt input! K-værdien må min. sættes til 0</small></p>
+    {:else}
+        <p><small>K-værdi {Math.round(k)} ms</small></p>
+    {/if}
+</IndstBox>
+<IndstBox title="Ret Misvisning">
+    <p>E: positiv, W: negativ</p>
+    <label> 
+        <input type=number bind:value={misvisning} step="0.25" min="-10" max="10">
+        <input type=range bind:value={misvisning} step="0.25" min="-10" max="10" >
+    </label>
+</IndstBox>
 
- 
 <!-- ***************************************************************************************** -->
 
 <style>
@@ -54,16 +96,6 @@ function sendRatenTilGyro() {
         width:11em
     }
 
-    span{
-        display: inline-block;
-        width:2em;  
-    }
-
-    .panel{
-        margin: 0;
-        padding: 0 15px 15px 15px;
-        background-color: wheat;
-    } 
     p{
         margin: 0;
         padding: 0;

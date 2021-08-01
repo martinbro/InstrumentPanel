@@ -3,7 +3,7 @@ import {
     isFixed,fixedLat,fixedLng,
     isVisGyro, isVisFluxgate,isVisRawFluxgate,
     radius,antalVektorer,
-    isVisGPS,antalGPSpos,aktuelAntalGPSpos,point,hidefixpos} from "../stores/indstStore"
+    isVisGPS,antalGPSpos,aktuelAntalGPSpos,point,hidefixpos} from "../stores/tsStore"
 import type {IGPS} from "../Interfaces/interfaces"
 import IndstBox from "./IndstBox.svelte"
 
@@ -21,10 +21,10 @@ function setPoint() {
         $fixedLng = $point.lng/1;
         $hidefixpos = false;
     }
-    console.log($point.lat,$point.lng,$fixedLat,$fixedLng);
+// console.log($point.lat,$point.lng,$fixedLat,$fixedLng);
     
 }
-
+let setWP:boolean = false;
 let fixPos = ()=>{
     if($isFixed && $fixedLng==0){
         $fixedLat = gps.lat;
@@ -86,7 +86,7 @@ let fixPos = ()=>{
     </label>
     <p><small>Aktuel antal viste GPS pos.: {$aktuelAntalGPSpos}</small> </p>
 </IndstBox>
- 
+
 <!-- ***************************************************************************************** -->
 
 <style>
