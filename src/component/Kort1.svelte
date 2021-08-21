@@ -19,7 +19,8 @@
 
     //Variable
     let map:any = undefined;
-    let startpos:IPos = {lat:54.8568430, lng:10.5174850};
+    //let startpos:IPos = {lat:54.8568430, lng:10.5174850}; //Hjemme
+    let startpos:IPos = {lat:54.850798, lng:10.510236}; //Navi  
     
 
     //Håndterer skibets position og retningsvektor 

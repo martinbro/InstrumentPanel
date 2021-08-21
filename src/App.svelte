@@ -6,8 +6,9 @@
 */
 	import Kort from "./component/Kort1.svelte";
 	import VisGPSData from "./component/VisGPSdata.svelte";
+	import LoggedData from "./component/LoggedData.svelte";
 	import VisBNOData from "./component/VisBNOdata.svelte";
-	import Indstillinger from "./component/Indst.svelte";
+	import Indstillinger from "./component/KortInstillinger.svelte";
 	import Gyroindstillinger from "./component/Gyrokompas.svelte";
 	import WayPoints from "./component/WayPoints.svelte";
 	import Styring from "./component/Styring.svelte";
@@ -101,6 +102,9 @@
 	<div id="kort">
 		<Kort kurs = {bno.kurs} fluxgate={bno.kursGS} rawfluxgate={bno.rawkurs} gps={gps}></Kort>
 	</div>
+	<div id="loggeddata">
+		<LoggedData bno = {bno} ></LoggedData>
+	</div>
 	<!-- Højre side -->
 	<div id="indstillinger">
 		<Indstillinger gps = {gps}></Indstillinger>
@@ -149,6 +153,11 @@
 	#kort{
 		grid-column: 2 / span 3;
 		grid-row: 3/span 5;
+		/* background-color:gold; */
+	}
+	#loggeddata{
+		grid-column: 2 / span 3;
+		grid-row: 8/span 5;
 		/* background-color:gold; */
 	}
 	/* Højreside */

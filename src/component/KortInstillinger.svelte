@@ -36,10 +36,10 @@ let fixPos = ()=>{
 <!-- <head><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></head> -->
 <!-- *************************************************************************************************************** -->
 
-<h2>Kort indstillinger</h2>
+<h2>Kortindstillinger</h2>
 <IndstBox title="Vis Gyrokompas" bind:checked="{$isVisGyro}" ></IndstBox>
-<IndstBox title="Vis Fluxgate" bind:checked="{$isVisFluxgate}"  ></IndstBox>
-<IndstBox title="Vis Fluxgate (ikke stabiliseret)" bind:checked="{$isVisRawFluxgate}"  ></IndstBox>
+<IndstBox title="Vis Fluxgate (krængningsstabiliseret)" bind:checked="{$isVisFluxgate}"  ></IndstBox>
+<IndstBox title="Vis Fluxgate (rå data)" bind:checked="{$isVisRawFluxgate}"  ></IndstBox>
 
 <IndstBox title="Fasthold position" show_ret="{$isFixed?true:false}" bind:ret="{$hidefixpos}" bind:checked = "{$isFixed}">
 

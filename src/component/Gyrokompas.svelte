@@ -66,7 +66,7 @@ function sendMisvisning(misvisning:number): void {
     {/if}
 </IndstBox>
 
-<IndstBox title="ret K-værdi" >
+<IndstBox title="Ret K-værdi" >
     <p>Procentdel gyroen vægter i forhold til fluxgate</p>
     <label> 
         <input type=number bind:value={k} step=0.01 min=0 max=1.00>

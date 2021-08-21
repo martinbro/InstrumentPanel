@@ -19,9 +19,9 @@
 
     //bygger et array som sendes videre til visning
     $:d=[
-        {name:"Gyrokurs", val:formatKurs((bno.kurs)).toFixed(1)},
-        {name:"Kalibrering", val:bno.kal},
-        {name:"Fluxgate", val:bno.rawkurs.toFixed(1)},
+        {name:"Gyrokurs", val:formatKurs(bno.kurs).toFixed(1)},
+        // {name:"Kalibrering", val:bno.kal},
+        {name:"Fluxgate", val:formatKurs(bno.rawkurs).toFixed(1)},
         {name:"Roll", val:bno.roll.toFixed(2)},
         {name:"Pitch", val:bno.pitch.toFixed(2)},
         {name:"dt", val:bno.dt.toFixed(3)},

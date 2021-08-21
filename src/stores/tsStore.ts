@@ -1,8 +1,8 @@
 import { Writable, writable } from 'svelte/store';
 import type {IPos}from "../Interfaces/interfaces"
 export let isFixed:Writable<boolean> = writable(false);
-export let fixedLat:Writable<number> = writable(54.8568430);//default
-export let fixedLng:Writable<number> = writable(10.5174850);//default
+export let fixedLat:Writable<number> = writable(54.850798);//default  
+export let fixedLng:Writable<number> = writable(10.510236);//default
 
 export let crosshair:Writable<boolean> = writable(false);
 
