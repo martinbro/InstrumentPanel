@@ -1,10 +1,18 @@
 <script lang="ts">
-    import {point,WayPoints,isVisWaypoints,crosshair,hidefixpos} from "../stores/tsStore"
+    import {point,WayPoints,isVisWaypoints,crosshair,hidefixpos,rwp} from "../stores/tsStore"
     import type {IPos} from "../Interfaces/interfaces"
     import IndstBox from "./IndstBox.svelte"
 
     export let ws:WebSocket; 
-    
+    $: sendR_værdi($rwp);
+    function sendR_værdi(r:number): void {
+        if(ws.readyState != ws.OPEN) return;
+
+        if(r<0) return  //safety
+
+        let m:string = `esp;e${r}`;
+        ws.send(m);
+    }
     function sendWP():void {
     if(ws.readyState != ws.OPEN) return;
 
@@ -149,6 +157,16 @@
             {/each}
         {/if}
        
+    </IndstBox>
+    <IndstBox title="Ret radius til WP: {$rwp} m" >
+        <p>Acceptabel afstand til waypoint i meter</p>
+        <label> 
+            <input type=number bind:value={$rwp} step=1 min=0 max=50>
+            <input type=range bind:value={$rwp} step=1 min=0 max=50>
+        </label>
+        {#if $rwp < 0}
+            <p><small style="color:red">Ulovligt input! radius kan ikke være under 0m</small></p>
+        {/if}
     </IndstBox>
     
     <!-- ***************************************************************************************** -->

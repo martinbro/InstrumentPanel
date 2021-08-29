@@ -23,3 +23,4 @@ export let hidefixpos:Writable<boolean> = writable(false);
 export let isVisWaypoints:Writable<boolean> = writable(false);
 export let antalWayPoints:Writable<number> = writable(10);
 export let WayPoints:Writable<IPos[]> = writable([]);
+export let rwp:Writable<number> = writable(5);//radius til WP i meter.

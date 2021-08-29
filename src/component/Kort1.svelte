@@ -6,7 +6,7 @@
             isVisGyro, isVisFluxgate,isVisRawFluxgate,antalVektorer,
             radius,isVisGPS,antalGPSpos,aktuelAntalGPSpos,
             point,hidefixpos, crosshair,
-            WayPoints,isVisWaypoints,antalWayPoints
+            WayPoints,isVisWaypoints,antalWayPoints,rwp
             } from "../stores/tsStore"
 
     export let kurs:number;
@@ -33,7 +33,8 @@
         if(!$isVisWaypoints) remove(containers.wp,0);
         else plotWP()
     }
-    $: $WayPoints,plotWP()
+    $: $rwp,plotWP();
+    $: $WayPoints,plotWP();
     let plotWP=():void=>{
         if(map ==undefined) return; //venter til map er instantieret (første tik)
         //Hvis $WayPoints ændre sig - ifm. tilføjelse eller redigering:
@@ -44,7 +45,7 @@
         vis: $isVisWaypoints,
         pos: {lat:0,lng:0},
         color:"green",
-        radius: 0.2,
+        radius: $rwp,
         antal:$antalWayPoints
     }
         !wpState.vis? max=0: max= $WayPoints.length;

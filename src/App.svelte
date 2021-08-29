@@ -16,7 +16,7 @@
 
 	import type { IGPS,IBNO } from "./Interfaces/interfaces"
 
-	let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws');//Computers mobil netværk
+	let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws1');//Computers mobil netværk
 	
 	// interface I_DATA{
 	// 	name: String,
