@@ -4,8 +4,11 @@
     import type {IBNO} from "../Interfaces/interfaces"
 
     export let bno:IBNO;
-    let k: string[] =Object.keys(bno)
+    export let frag:number;
 
+    let k: string[] =Object.keys(bno);
+    // let clock:number = 0;
+    $: clock= (frag>0 || clock>0)?clock=160:0
 
     const formatKurs = (kurs:number):number=>{
         while (kurs<0) {
@@ -14,22 +17,23 @@
         while (kurs>360){
             kurs -= 360;
         }
+        if (frag != 0) {clock = 160;}
         return kurs;
     }
 
     //bygger et array som sendes videre til visning
     $:d=[
-        {name:"Gyrokurs", val:formatKurs(bno.kurs).toFixed(1)},
-        {name:"Kalibrering", val:bno.kal},
+        {name:"Heap", val:bno.heap},
+        {name:"Fragmentering", val:frag+"%"},
+        {name:"Clock MHz", val:clock + "MHz"}
         // {name:"Fluxgate", val:formatKurs(bno.rawkurs).toFixed(1)},
-        {name:"Roll", val:bno.roll.toFixed(2)},
-        {name:"Pitch", val:bno.pitch.toFixed(2)},
-        // {name:"heap", val:bno.heap},
+        // {name:"Roll", val:bno.roll.toFixed(2)},
+        // {name:"Pitch", val:bno.pitch.toFixed(2)},
 
     ];
 
 </script>
-    <h3>Gyro data</h3>
+    <h3>PLC ydeevne</h3>
     <span>
         {#each d as elm}
             <ul>

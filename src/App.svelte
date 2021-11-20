@@ -8,15 +8,23 @@
 	import VisGPSData from "./component/VisGPSdata.svelte";
 	import LoggedData from "./component/LoggedData.svelte";
 	import VisBNOData from "./component/VisBNOdata.svelte";
+	import VisStyringData from "./component/VisStyringsData.svelte";
 	import Indstillinger from "./component/KortInstillinger.svelte";
 	import Gyroindstillinger from "./component/Gyrokompas.svelte";
 	import WayPoints from "./component/WayPoints.svelte";
 	import Styring from "./component/Styring.svelte";
+	import VisHelthData from "./component/Helth.svelte";
 	import Statistik from "./component/Statistik.svelte";
 
-	import type { IGPS,IBNO } from "./Interfaces/interfaces"
+	import type { IGPS,IBNO,IROR} from "./Interfaces/interfaces"
 
-	let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws1');//Computers mobil netværk
+	 //let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws1');//Computers mobil netværk
+	 let ws:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws2');//Computers mobil netværk
+	 let wsBNO:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws1bno');//Computers mobil netværk
+	 let wsROR:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws1ror');//Computers mobil netværk
+	 let wsGPS:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws1gps');//Computers mobil netværk
+
+	//  let wsMotor:WebSocket = new WebSocket('ws://192.168.137.1:8000/ws4');//Computers mobil netværk
 	
 	// interface I_DATA{
 	// 	name: String,
@@ -28,8 +36,8 @@
 		lng:10.5174850,
 		hdop: 0,
 		sat: 0,
-		// course: 0,
-		// speed: 0,
+		 course: 0,
+		 speed: 0,
 	};
 	//let bno1:number[];
 	let bno:IBNO={
@@ -39,23 +47,31 @@
 		dt: 0.000,
 		kal: 1000,
 		rawkurs: 0.0,
-		kursGS: 0.0,
-		sp: 0.0,
-		ror: 0.0,
+		fragmentering: 0,//kursGS: 0.0,
+		// sp: 0.0,
+		// ror: 0.0,
+		heap:0.0,
 	};
+	let udl:IROR ={
+		udl: 0.0,
+		afstandWP: 0.0,
+		activeWP : 0.0,
+		spKurs : 0.0,
+		ror : 0.0,
+	}
 		
 	
 	//setup listner 
-	const inputMassage = ({data}) => {
-	const str:string[] = data.split(",");
-	 
-	const navn:string = str.shift();
-
-	if(navn ==='gps'){
+	wsGPS.addEventListener("message", ({data}) => {
+		console.log("GPS: ",data);
+		const str:string[] = data.split(",");
+		
+		const navn:string = str.shift();
+	
 		if(str.length==6){
 			try {
-				gps.lat = Number(str[0]);
-				gps.lng = Number(str[1]);
+				gps.lat = Number(str[0])/1000000;
+				gps.lng = Number(str[1])/1000000;
 				gps.hdop = Number(str[2]);
 				gps.sat = Number(str[3]);
 				gps.course = Number(str[4]);
@@ -64,29 +80,55 @@
 				console.log(error);
 			}
 		}
-	}
+		// console.log(gps.lat);
+	});
 
-	if(navn == "bno"){ 
-		if(str.length==9){
-			try {
-				bno.kurs = Number(str[0]);
-				bno.roll = Number(str[1]);
-				bno.pitch = Number(str[2]);
-				bno.dt = Number(str[3]);
-				bno.kal = Number(str[4]);
-				bno.rawkurs = Number(str[5]);
-				bno.kursGS = Number(str[6]);
-				bno.sp = Number(str[7]);
-				bno.ror = Number(str[8]);
+	wsBNO.addEventListener("message", ({data}) => {
+		
+		
+		const str:string[] = data.split(",");
+
+		const navn:string = str.shift();
+			if(str.length==8){
+				try {
+					bno.kurs = Number(str[0]);
+					bno.roll = Number(str[1]);
+					bno.pitch = Number(str[2]);
+					bno.dt = Number(str[3]);
+					bno.kal = Number(str[4]);
+					bno.rawkurs = Number(str[5]);
+					bno.kursGS = Number(str[6]);
+					bno.heap = Number(str[7]);
+					
+				} catch (error) {
+					console.log(error);
+				}
 				
-			} catch (error) {
-				console.log(error);
-			}			
-		}
-	}
+							
+			}
+		// console.log('ws1bno',str);
+	});
+	wsROR.addEventListener("message", ({data}) => {
+		console.log("ROR: ",data);
+		const str:string[] = data.split(",");
+		
+		const navn:string = str.shift();
+		console.log("ROR: ",str.length);
+		if(str.length==6){
+				try {
+					udl.udl = Number(str[4]);
+					udl.afstandWP = Number(str[1]);
+					udl.activeWP = Number(str[2]);
+					udl.spKurs = Number(str[3]);
+					udl.ror = Number(str[4]);
+				
+				} catch (error) {
+					console.log(error);
+				}			
+			}
+		
+	});
 	
-	}
-	ws.addEventListener('message', inputMassage)
 </script>
 <svelte:head>
 	<title>Navigations App</title>
@@ -99,11 +141,17 @@
 	<div id="gyro">
 		<VisBNOData bno = {bno} ></VisBNOData>
 	</div>
+	<div id="ror">
+		<VisStyringData ror = {udl}></VisStyringData>
+	</div>
+	<div id="helth">
+		<VisHelthData bno = {bno} frag={gps.course}></VisHelthData>
+	</div>
 	<div id="kort">
 		<Kort kurs = {bno.kurs} fluxgate={bno.kursGS} rawfluxgate={bno.rawkurs} gps={gps}></Kort>
 	</div>
 	<div id="loggeddata">
-		<LoggedData bno = {bno} ></LoggedData>
+		<LoggedData bno = {bno} gps = {gps}></LoggedData>
 	</div>
 	<!-- Højre side -->
 	<div id="indstillinger">
@@ -116,7 +164,7 @@
 		<Statistik></Statistik>
 	</div>
 	<div id="Styring">
-		<Styring></Styring>
+		<Styring ws={ws}></Styring> 
 	</div>
 	<div id="WayPoints">
 		<WayPoints ws={ws}></WayPoints>
@@ -148,7 +196,14 @@
 	#gyro{
 		grid-column: 3 / span 1;
 		/* background-color:burlywood; */
-		
+	}
+	#ror{
+		grid-column: 4 / span 1;
+		/* background-color:burlywood; */
+	}
+	#helth{
+		grid-column: 5 / span 1;
+		/* background-color:burlywood; */
 	}
 	#kort{
 		grid-column: 2 / span 3;

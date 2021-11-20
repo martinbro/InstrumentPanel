@@ -55,7 +55,6 @@
            if($WayPoints.length<10){
                $WayPoints = [...$WayPoints,point];//Tilføjer WP
                
-        
            } 
 
         } 

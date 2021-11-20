@@ -8,7 +8,7 @@ import type {IGPS} from "../Interfaces/interfaces"
 import IndstBox from "./IndstBox.svelte"
 
 export let gps:IGPS;
-let showRetPos=false;
+// let showRetPos=false;
 
 $: antalMeter = Math.round($radius*1852/60*10)/10;
 $: $isFixed, fixPos();

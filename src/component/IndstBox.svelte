@@ -27,7 +27,6 @@ function handle(checked:boolean) {
     </div>
 </div>
 
-
 {#if checked}
     <div class="panel" transition:fly="{{ y: -25, duration: 200 }}">
         <slot ></slot>

@@ -6,7 +6,7 @@
             isVisGyro, isVisFluxgate,isVisRawFluxgate,antalVektorer,
             radius,isVisGPS,antalGPSpos,aktuelAntalGPSpos,
             point,hidefixpos, crosshair,
-            WayPoints,isVisWaypoints,antalWayPoints,rwp
+            WayPoints,isVisWaypoints,antalWayPoints,rwp,activeWP
             } from "../stores/tsStore"
 
     export let kurs:number;
@@ -28,7 +28,8 @@
         if ($isFixed) return {lat:$fixedLat, lng:$fixedLng};
         else return {lat:gps.lat, lng:gps.lng};
     }
-    $: $isVisWaypoints, visWP()
+    $: $activeWP,visWP();
+    $: $isVisWaypoints, visWP();
     let visWP = ()=>{
         if(!$isVisWaypoints) remove(containers.wp,0);
         else plotWP()
@@ -40,20 +41,32 @@
         //Hvis $WayPoints ændre sig - ifm. tilføjelse eller redigering:
         //1. først fjernes alle 'gamle' wp
         remove(containers.wp,0);
+        remove(containers.icon,0)
         let max:number;
         let wpState = {
-        vis: $isVisWaypoints,
-        pos: {lat:0,lng:0},
-        color:"green",
-        radius: $rwp,
-        antal:$antalWayPoints
-    }
+            vis: $isVisWaypoints,
+            pos: {lat:0,lng:0},
+            color:"green",
+            radius: $rwp,
+            antal:$antalWayPoints
+        }
+        let iconState = {
+            pos: {lat:0,lng:0},
+            number:0
+        }
         !wpState.vis? max=0: max= $WayPoints.length;
-        $WayPoints.forEach(p => {
-            wpState.pos=p;
+        $WayPoints.forEach((p,index) => {
+            wpState.pos = p;
+            if($activeWP==index){wpState.color="green"} else {wpState.color="red"}          
+            iconState.pos = p;
+            iconState.number = index+1;
+            console.log(p,index,iconState.number);
+            
             if(max>0){
                 containers.wp.push(circle(wpState));
+                containers.icon.push(icon(iconState));
                 containers.wp[containers.wp.length - 1].addTo(map); 
+                containers.icon[containers.wp.length - 1].addTo(map); 
             } 
         });
         
@@ -93,7 +106,8 @@
         rawflux:[],
         flux:[],
         gps:[],
-        wp:[]
+        wp:[],
+        icon:[]
     }
 
     $: updateVektor(kurs, kursState, containers.kurs );
@@ -143,6 +157,7 @@
             $aktuelAntalGPSpos = container.length;
            // console.log("antal gps:",l);
             container[$aktuelAntalGPSpos - 1].addTo(map); 
+            
         } 
     }
     
@@ -158,7 +173,14 @@
             smoothFactor: 1,
         });
     };
-
+    const icon:L.marker = (state)=>{
+        return new L.marker([state.pos.lat-(-0.00005), state.pos.lng], {
+            icon: L.divIcon({
+                className: 'my-custom-icon',
+                html: `<p style='color:red'>${state.number}</p>`
+            })
+        })
+    }
     const circle:L.circle = (state:IState)=>{
             return new L.circle([state.pos.lat, state.pos.lng], {
             color: state.color,
@@ -182,6 +204,7 @@
             maxZoom: 17
         });
         Esri_WorldImagery.addTo(m);
+        
         // let OpenSeaMap = L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
         //     attribution: ' &copy; OpenSeaMap'
         // });

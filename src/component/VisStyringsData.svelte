@@ -1,12 +1,19 @@
 <script lang="ts">
     /*Ansvar: 1 formatringen for output der sendes fra ESP8255
     //data tilgås fra App.svelte som en prop.*/
-    import type {IBNO} from "../Interfaces/interfaces"
+    // import type {IROR} from "../Interfaces/interfaces"
+    import type { IROR } from "../Interfaces/interfaces"
+    import {activeWP } from "../stores/tsStore"
 
-    export let bno:IBNO;
-    let k: string[] =Object.keys(bno)
-
-
+    export let ror:IROR;
+    $:$activeWP = ror.activeWP
+    //bygger et array som sendes videre til visning
+    $:d= [
+        {name:"Ror", val:Math.round(ror.udl)},
+        {name:"Kurs", val:formatKurs(ror.spKurs).toFixed(1)},
+        {name:"Dist WP", val:ror.afstandWP},//.toFixed(6)},
+        // {name:"error", val:ror.ror},
+    ];
     const formatKurs = (kurs:number):number=>{
         while (kurs<0) {
             kurs += 360;
@@ -16,20 +23,8 @@
         }
         return kurs;
     }
-
-    //bygger et array som sendes videre til visning
-    $:d=[
-        {name:"Gyrokurs", val:formatKurs(bno.kurs).toFixed(1)},
-        {name:"Kalibrering", val:bno.kal},
-        // {name:"Fluxgate", val:formatKurs(bno.rawkurs).toFixed(1)},
-        {name:"Roll", val:bno.roll.toFixed(2)},
-        {name:"Pitch", val:bno.pitch.toFixed(2)},
-        // {name:"heap", val:bno.heap},
-
-    ];
-
 </script>
-    <h3>Gyro data</h3>
+<h3>Styring</h3>
     <span>
         {#each d as elm}
             <ul>
@@ -37,11 +32,11 @@
                 <li>{elm.val}</li>
             </ul>
         {/each}
-        </span>
+    </span>
 <style>
 span {
     display: grid;
-    grid-template-columns: repeat(6, auto);
+    grid-template-columns: auto auto auto auto auto;
     gap: 0.5em;
 }
 ul {

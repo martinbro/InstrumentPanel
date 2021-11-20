@@ -9,7 +9,7 @@ export let crosshair:Writable<boolean> = writable(false);
 export let radius:Writable<number> = writable(1);//default 1 buesek
 
 export let isVisGyro:Writable<boolean> = writable(true);
-export let isVisFluxgate:Writable<boolean> = writable(false);
+export let isVisFluxgate:Writable<boolean> = writable(false);//,aktuelAntalGPSpos,
 export let isVisRawFluxgate:Writable<boolean> = writable(false);
 export let antalVektorer:Writable<number> = writable(1);
 
@@ -24,3 +24,4 @@ export let isVisWaypoints:Writable<boolean> = writable(false);
 export let antalWayPoints:Writable<number> = writable(10);
 export let WayPoints:Writable<IPos[]> = writable([]);
 export let rwp:Writable<number> = writable(5);//radius til WP i meter.
+export let activeWP:Writable<number> = writable(0);
