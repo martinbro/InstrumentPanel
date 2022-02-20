@@ -20,9 +20,7 @@ function handle(checked:boolean) {
     {title} 
     <small>{notat}</small>
     </label>
-    <!-- <slot   class="left pointer" name="show_ret">
-        <span  on:click={()=> ret=!ret}>abc</span>
-    </slot> -->
+
     <div on:click={()=> ret=!ret} hidden={!show_ret} class="left pointer">{!ret?"ret":"gem"}
     </div>
 </div>

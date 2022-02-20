@@ -36,8 +36,9 @@
 		lng:10.5174850,
 		hdop: 0,
 		sat: 0,
-		 course: 0,
-		 speed: 0,
+		course: 0,
+		speed: 0,
+		time: 0,
 	};
 	//let bno1:number[];
 	let bno:IBNO={
@@ -63,19 +64,21 @@
 	
 	//setup listner 
 	wsGPS.addEventListener("message", ({data}) => {
-		console.log("GPS: ",data);
 		const str:string[] = data.split(",");
-		
+		// console.log("GPS: ",data);
 		const navn:string = str.shift();
 	
-		if(str.length==6){
+		if(str.length==7){
 			try {
 				gps.lat = Number(str[0])/1000000;
 				gps.lng = Number(str[1])/1000000;
 				gps.hdop = Number(str[2]);
 				gps.sat = Number(str[3]);
 				gps.course = Number(str[4]);
-				gps.speed = Number(str[5]);	
+				gps.speed = Number(str[5]);
+				const tttt = Number(str[6].trim())
+				gps.time = tttt/1.0;
+					
 			} catch (error) {
 				console.log(error);
 			}
@@ -145,7 +148,7 @@
 		<VisStyringData ror = {udl}></VisStyringData>
 	</div>
 	<div id="helth">
-		<VisHelthData bno = {bno} frag={gps.course}></VisHelthData>
+		<VisHelthData bno = {bno} ></VisHelthData>
 	</div>
 	<div id="kort">
 		<Kort kurs = {bno.kurs} fluxgate={bno.kursGS} rawfluxgate={bno.rawkurs} gps={gps}></Kort>
@@ -161,7 +164,7 @@
 		<Gyroindstillinger ws={ws}></Gyroindstillinger>
 	</div>
 	<div id="Statistik">
-		<Statistik></Statistik>
+		<Statistik bno = {bno}></Statistik>
 	</div>
 	<div id="Styring">
 		<Styring ws={ws}></Styring> 

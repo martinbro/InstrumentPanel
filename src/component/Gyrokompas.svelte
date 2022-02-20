@@ -6,7 +6,7 @@ import IndstBox from "./IndstBox.svelte"
 
 export let ws:WebSocket; 
 
-let opdatefrek:number = 10;
+let opdatefrek:number = 50;
 let k: number = 0.99;
 let misvisning:number = 3.75;
 

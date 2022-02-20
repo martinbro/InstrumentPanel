@@ -13,6 +13,10 @@ export let logGPSData: Writable<boolean> = writable(false);
 export let maxAntalGPS: Writable<number> = writable(1000);//default
 export let AntalGps: Writable<number[]>= writable([]);//default;
 
+export let logAccData: Writable<boolean> = writable(false);//
+export let maxAntalAcc: Writable<number> = writable(1000);//default
+export let AntalAcc: Writable<number[]>= writable([]);//default;
+
 
 
 

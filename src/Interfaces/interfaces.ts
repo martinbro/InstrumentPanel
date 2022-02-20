@@ -6,6 +6,7 @@ interface IGPS{
     sat: number;
     course?: number;
     speed?: number;
+    time?: number;
 }
 interface IROR{
     udl: number;

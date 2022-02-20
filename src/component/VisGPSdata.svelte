@@ -12,8 +12,8 @@
         {name:"Bredde gr.", val:gps.lng.toFixed(6)},
         {name:"HDOP", val:gps.hdop.toFixed(1)},
         {name:"Sat", val:gps.sat},
-        //{name:"Kurs",val:gps.course},
-        //{name:"Fart",val:gps.speed},
+        {name:"Kurs",val:gps.course.toFixed(1)},
+        {name:"Fart",val:gps.speed.toFixed(1)},
     ];
 
 </script>
@@ -29,7 +29,7 @@
 <style>
 span {
     display: grid;
-    grid-template-columns: auto auto auto auto auto;
+    grid-template-columns: auto auto auto auto auto auto;
     gap: 0.5em;
 }
 ul {

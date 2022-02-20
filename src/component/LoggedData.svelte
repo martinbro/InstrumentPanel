@@ -14,6 +14,7 @@ import { now } from "svelte/internal";
     export let gps:IGPS;
 
     interface IloggedItem{
+        time: number;
         gyrokurs: number;
         // fluxgate: number; 
         // time: number
@@ -22,6 +23,8 @@ import { now } from "svelte/internal";
         lat: number;
         lng: number;
         time: number;
+        kurs: number;
+        speed: number;
         // fluxgate: number; 
         // time: number
     }
@@ -51,15 +54,6 @@ import { now } from "svelte/internal";
         $AntalGps = ddGPS.length;
     }
 
-   
-    // $:sletGyroData($logGyroData)
-    // let sletGyroData =(logGyroData)=>{
-    //     if(!logGyroData) {
-    //         console.log("$logGyroData: heeeeeeeeeeeeeeeer",$logGyroData);
-    //         let d=[];
-    //         dd=d;
-    //     }
-    // }
     
     $:if(bno.dt!=-1 ){
         if(!$logGyroData){
@@ -67,23 +61,27 @@ import { now } from "svelte/internal";
             dd=dd;
  
         }else if(dd != undefined && dd.length<$maxAntalGyro){
-            dd.push({gyrokurs: formatKurs((bno.kurs))});
+            
+            dd.push({time:now(),gyrokurs: formatKurs((bno.kurs))});
             dd=dd;//opdaterer dd i svelte
-            console.log('den trikker!!!');
+            // console.log('den trikker!!!');
         }
     }
     
     $:if(gps.sat >0 && $logGPSData){
         if(ddGPS != undefined && ddGPS.length<$maxAntalGPS){
-            ddGPS.push({lat: gps.lat,lng: gps.lng,time:now()});
+            
+            ddGPS.push({lat: gps.lat,lng: gps.lng,time:gps.time,speed:gps.speed,kurs:gps.course,});
             ddGPS=ddGPS;//opdaterer dd i svelte
-            console.log('GPS trikker!!!',gps.lat,gps.lng);
+            // console.log('GPS trikker!!!',gps.lat,gps.lng,gps.speed,gps.course);
         }
     }
 
     let download_csv =() => {
-        let csv = 'Kurs\n';
+        let csv = 'Tidsstempel (ms);Kurs\n';
         dd.forEach(function(row) {
+            csv += row.time-dd[0].time;
+            csv += ";"
             csv += row.gyrokurs.toFixed(1);
             csv += ";"
             csv += "\n";
@@ -96,13 +94,17 @@ import { now } from "svelte/internal";
         hiddenElement.click();
     }
     let downloadGPS_csv =() => {
-        let csv = 'Tidsstempel (ms);Lat;Lng\n';
+        let csv = 'Tidsstempel (s);Lat;Lng;SOG(m/s);COG\n';
         ddGPS.forEach(function(row) {
-            csv += row.time;
+            csv += (row.time-ddGPS[0].time)/1000;
             csv += ";"
             csv += row.lat.toFixed(6);
             csv += ";"
             csv += row.lng.toFixed(6);
+            csv += ";"
+            csv += row.speed.toFixed(1);
+            csv += ";"
+            csv += row.kurs.toFixed(1);
             csv += ";"
             csv += "\n";
         });
