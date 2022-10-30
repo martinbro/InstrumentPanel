@@ -38,7 +38,7 @@
 		sat: 0,
 		course: 0,
 		speed: 0,
-		time: 0,
+		time: "0"
 	};
 	//let bno1:number[];
 	let bno:IBNO={
@@ -64,26 +64,28 @@
 	
 	//setup listner 
 	wsGPS.addEventListener("message", ({data}) => {
-		const str:string[] = data.split(",");
-		// console.log("GPS: ",data);
+		const strRaw:string = data.trim();
+		const str:string[] = strRaw.split(",");
+		console.log("GPS: ",data);
 		const navn:string = str.shift();
 	
 		if(str.length==7){
 			try {
-				gps.lat = Number(str[0])/1000000;
-				gps.lng = Number(str[1])/1000000;
+				gps.lat = Number(str[0]);
+				gps.lng = Number(str[1]);
 				gps.hdop = Number(str[2]);
 				gps.sat = Number(str[3]);
 				gps.course = Number(str[4]);
 				gps.speed = Number(str[5]);
-				const tttt = Number(str[6].trim())
-				gps.time = tttt/1.0;
+				const ssss = str[6].trim();
+				// const tttt:number = Number(ssss)/1.0;
+				// console.log(ssss,tttt);
+				gps.time = ssss;
 					
 			} catch (error) {
 				console.log(error);
 			}
 		}
-		// console.log(gps.lat);
 	});
 
 	wsBNO.addEventListener("message", ({data}) => {
@@ -112,11 +114,11 @@
 		// console.log('ws1bno',str);
 	});
 	wsROR.addEventListener("message", ({data}) => {
-		console.log("ROR: ",data);
+		// console.log("ROR: ",data);
 		const str:string[] = data.split(",");
 		
 		const navn:string = str.shift();
-		console.log("ROR: ",str.length);
+		// console.log("ROR: ",str.length);
 		if(str.length==6){
 				try {
 					udl.udl = Number(str[4]);
@@ -154,7 +156,7 @@
 		<Kort kurs = {bno.kurs} fluxgate={bno.kursGS} rawfluxgate={bno.rawkurs} gps={gps}></Kort>
 	</div>
 	<div id="loggeddata">
-		<LoggedData bno = {bno} gps = {gps}></LoggedData>
+		<LoggedData bno = {bno} gps = {gps} ror = {udl}></LoggedData>
 	</div>
 	<!-- Højre side -->
 	<div id="indstillinger">

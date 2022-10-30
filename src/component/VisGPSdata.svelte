@@ -1,4 +1,6 @@
 <script lang="ts">
+import { validate_component } from "svelte/internal";
+
     /*Ansvar: 1 formatringen for output der sendes fra ESP8255
     //data tilgås fra App.svelte som en prop.*/
     import type {IGPS} from "../Interfaces/interfaces"

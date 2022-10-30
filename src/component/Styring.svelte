@@ -14,7 +14,7 @@
     // export let hdop:Number;
    
     $: sendP_value(p);
-    $: sendI_value(i);
+    $: sendI_value(i*10);
     $: sendKalibRor_value(kalibRor+90);//de 180 skyldes at der trækkes 90 fra i c++ koden
     $: sendFart_value(fart);
 
@@ -46,8 +46,10 @@
     }
     function sendFart_value(fart:number): void {
         if(ws.readyState != ws.OPEN) return;
-        let m:string = `esp;jb${fart}`;//${rev?'-':''}
+        let m:string = `esp;j${fart}`;//${rev?'-':''}
         if(Math.abs(fart)<250.01)
+        console.log("fart:",m);
+        
         ws.send(m);
     }
 
@@ -69,8 +71,8 @@
     <slot>
         <p>Rorudlæg proportional med sum af kursafvigelser</p>
         <label> 
-            <input type=number bind:value={i} step=0.1 min=0 max=10.0>
-            <input type=range bind:value={i} step=0.1 min=0 max=10.0>
+            <input type=number bind:value={i} step=1 min=0 max=10.0>
+            <input type=range bind:value={i} step=1 min=0 max=10.0>
         </label>
         {#if i < 0}
             <p><small style="color:red">Ulovligt input! I-værdien må min. sættes til 0</small></p>

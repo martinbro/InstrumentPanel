@@ -1,6 +1,6 @@
 <script lang="ts">
     // import {point} from "../stores/tsStore"
-    import {logGyroData,AntalGyro,logGPSData,AntalGps,AntalAcc,logAccData} from "../stores/StatistikStore"
+    import {logGyroData,AntalGyro,logGPSData,AntalGps,logAccData} from "../stores/StatistikStore"
     // import type {IPos} from "../Interfaces/interfaces"
     import IndstBox from "./IndstBox.svelte"
     import type {IBNO} from "../Interfaces/interfaces"
@@ -43,13 +43,13 @@
     
 </script>
 <h2>Statistik</h2>
+<IndstBox title="Log Testsejladsdata"  bind:checked="{$logGPSData}">
+    <p>Antal samples: n={$AntalGps}</p>
+</IndstBox>
 <IndstBox title="Log Gyrokompasdata"  bind:checked="{$logGyroData}">
     <p>Antal samples: n={$AntalGyro} </p>
 </IndstBox>
 
-<IndstBox title="Log GPSdata"  bind:checked="{$logGPSData}">
-    <p>Antal samples: n={$AntalGps}</p>
-</IndstBox>
 <IndstBox title="Log Krængningsdata"  bind:checked="{$logAccData}">
     <p><small>Roll, Pitch: {bno.roll}&deg;, {bno.pitch}&deg; </small></p>
     <button on:click={toggle}>Lav ny data-sampling</button>
