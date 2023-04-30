@@ -14,6 +14,7 @@ interface IROR{
     activeWP: number;
     spKurs: number;
     ror: number;
+    xte: number;
 }
 
 interface IBNO{
@@ -48,6 +49,7 @@ interface IPos{
 //anvendes i Kort1.svelte
 interface IContainers{
     kurs: any[];
+    behkurs: any[];
     rawflux: any[];
     flux: any[];
     gps: any[];

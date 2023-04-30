@@ -10,8 +10,8 @@
     //bygger et array som sendes videre til visning
     $:d= [
         {name:"Ror", val:Math.round(ror.udl)},
-        {name:"Kurs", val:formatKurs(ror.spKurs).toFixed(1)},
-        {name:"Dist WP", val:ror.afstandWP},//.toFixed(6)},
+        {name:"XTE", val:(ror.xte).toFixed(1)},
+        {name:"DTG", val:ror.afstandWP},//.toFixed(6)},
         // {name:"error", val:ror.ror},
     ];
     const formatKurs = (kurs:number):number=>{

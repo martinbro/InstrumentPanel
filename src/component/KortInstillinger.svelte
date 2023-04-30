@@ -3,7 +3,7 @@ import {
     isFixed,fixedLat,fixedLng,
     isVisGyro, isVisFluxgate,isVisRawFluxgate,
     radius,antalVektorer,
-    isVisGPS,antalGPSpos,aktuelAntalGPSpos,point,hidefixpos} from "../stores/tsStore"
+    isVisGPS,isVisBeholdenGPS,antalGPSpos,aktuelAntalGPSpos,point,hidefixpos} from "../stores/tsStore"
 import type {IGPS} from "../Interfaces/interfaces"
 import IndstBox from "./IndstBox.svelte"
 
@@ -38,6 +38,7 @@ let fixPos = ()=>{
 
 <h2>Kortindstillinger</h2>
 <IndstBox title="Vis Gyrokompas" bind:checked="{$isVisGyro}" ></IndstBox>
+<IndstBox title="Vis Beholden Kurs (GPS)" bind:checked="{$isVisBeholdenGPS}" ></IndstBox>
 <IndstBox title="Vis Fluxgate (krængningsstabiliseret)" bind:checked="{$isVisFluxgate}"  ></IndstBox>
 <IndstBox title="Vis Fluxgate (rå data)" bind:checked="{$isVisRawFluxgate}"  ></IndstBox>
 

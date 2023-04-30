@@ -59,6 +59,7 @@
 		activeWP : 0.0,
 		spKurs : 0.0,
 		ror : 0.0,
+		xte : 0.0,
 	}
 		
 	
@@ -114,18 +115,20 @@
 		// console.log('ws1bno',str);
 	});
 	wsROR.addEventListener("message", ({data}) => {
-		// console.log("ROR: ",data);
-		const str:string[] = data.split(",");
+		console.log("ROR1: ",data);
+		const strRaw:string = data.trim();
+		const str:string[] = strRaw.split(",");
 		
 		const navn:string = str.shift();
-		// console.log("ROR: ",str.length);
-		if(str.length==6){
+		console.log("ROR2: ",str);
+		if(str.length==7){
 				try {
 					udl.udl = Number(str[4]);
 					udl.afstandWP = Number(str[1]);
 					udl.activeWP = Number(str[2]);
 					udl.spKurs = Number(str[3]);
 					udl.ror = Number(str[4]);
+					udl.xte = Number(str[5]);
 				
 				} catch (error) {
 					console.log(error);

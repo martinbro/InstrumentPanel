@@ -4,7 +4,7 @@
     import type {IPos,IGPS,IState,IContainers} from "../Interfaces/interfaces"
     import {isFixed,fixedLat,fixedLng,
             isVisGyro, isVisFluxgate,isVisRawFluxgate,antalVektorer,
-            radius,isVisGPS,antalGPSpos,aktuelAntalGPSpos,
+            radius,isVisGPS, isVisBeholdenGPS ,antalGPSpos,aktuelAntalGPSpos,
             point,hidefixpos, crosshair,
             WayPoints,isVisWaypoints,antalWayPoints,rwp,activeWP
             } from "../stores/tsStore"
@@ -19,8 +19,8 @@
 
     //Variable
     let map:any = undefined;
-    //let startpos:IPos = {lat:54.8568430, lng:10.5174850}; //Hjemme
-    let startpos:IPos = {lat:54.850798, lng:10.510236}; //Navi  
+    let startpos:IPos = {lat:54.8568430, lng:10.5174850}; //Hjemme
+    // let startpos:IPos = {lat:54.850798, lng:10.510236}; //Navi  
     
 
     //Håndterer skibets position og retningsvektor 
@@ -78,6 +78,13 @@
         radius:$radius/3600,
         antal:$antalVektorer
     }
+    $: behkursState = {
+        vis: $isVisBeholdenGPS,
+        pos: skibPos(),
+        color:"green",
+        radius:$radius/3600,
+        antal:$antalVektorer
+    }
     $: fluxState = {
         vis: $isVisFluxgate,
         pos: skibPos(),
@@ -103,6 +110,7 @@
     const containers:IContainers = {
         //Holder et antal streg/cirkelelementer
         kurs:[],
+        behkurs:[],
         rawflux:[],
         flux:[],
         gps:[],
@@ -111,6 +119,7 @@
     }
 
     $: updateVektor(kurs, kursState, containers.kurs );
+    $: updateVektor(gps.course, behkursState, containers.behkurs );
     $: updateVektor(fluxgate, fluxState, containers.flux);
     $: updateVektor(rawfluxgate, rawfluxState, containers.rawflux);
     $: UpdateCirkel( gpsState, containers.gps);

@@ -9,6 +9,7 @@ export let crosshair:Writable<boolean> = writable(false);
 export let radius:Writable<number> = writable(1);//default 1 buesek
 
 export let isVisGyro:Writable<boolean> = writable(true);
+export let isVisBeholdenGPS:Writable<boolean> = writable(true);
 export let isVisFluxgate:Writable<boolean> = writable(false);//,aktuelAntalGPSpos,
 export let isVisRawFluxgate:Writable<boolean> = writable(false);
 export let antalVektorer:Writable<number> = writable(1);

@@ -4,9 +4,8 @@
 
     /*Ansvar: 1 formatringen for output der sendes fra ESP8255
     //data tilgås fra App.svelte som en prop.*/
-    import type { IBNO, IGPS } from "../Interfaces/interfaces";
-    import type { IROR } from "../Interfaces/interfaces";
-
+    import type { IBNO, IGPS, IROR } from "../Interfaces/interfaces";
+    // import type { IROR } from "../Interfaces/interfaces";
     export let ror: IROR;
 
     import {
@@ -37,6 +36,7 @@
         gyrokurs: number;
         kursToWP: number;
         DistToGo: number;
+        xte: number;
         udlaeg: number;
         minRoll:number;
         maxRoll:number;
@@ -123,6 +123,7 @@
                         gyrokurs: formatKurs(bno.kurs),
                         kursToWP: formatKurs(ror.spKurs),
                         DistToGo: ror.afstandWP,
+                        xte: ror.xte,
                         udlaeg: ror.ror,
                         minRoll:minRoll,
                         maxRoll:maxRoll,
@@ -155,7 +156,7 @@
     };
     let downloadGPS_csv = () => {
         let csv =
-            "Tidsstempel (s);Lat;Lng;SOG(m/s);COG;Heading;Kurs til WP;DTG;rudder angle; min roll; max roll\n";
+            "Tidsstempel (s);Lat;Lng;SOG(m/s);COG;Heading;Kurs til WP;DTG(m);XTE(m);rudder angle; min roll; max roll\n";
         ddGPS.forEach(function (row) {
             csv += (row.time - ddGPS[0].time).toFixed(0);
             csv += ";";
@@ -172,6 +173,8 @@
             csv += row.kursToWP.toFixed(2);
             csv += ";";
             csv += row.DistToGo.toFixed(1);
+            csv += ";";
+            csv += row.xte.toFixed(1);
             csv += ";";
             csv += row.udlaeg.toFixed(1);
             csv += ";";
